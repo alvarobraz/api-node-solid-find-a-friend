@@ -3,6 +3,7 @@ import z from 'zod'
 import { PrismaOrgsRepository } from '@/repositories/prisma/prisma-orgs-repositories'
 import { CreateOrgUseCase } from '@/use-cases/create-org'
 // import { InMemoryOrgsRepository } from '@/repositories/in-memory-orgs-repository'
+import { OrgAlreadyExistsError } from '@/use-cases/errors/org-already-exists-error'
 
 export async function createOrg(request: FastifyRequest, reply: FastifyReply) {
   const registerBodySchema = z.object({
@@ -50,7 +51,11 @@ export async function createOrg(request: FastifyRequest, reply: FastifyReply) {
       longitude,
     })
   } catch (err) {
-    return reply.status(409).send()
+    if (err instanceof OrgAlreadyExistsError) {
+      return reply.status(409).send({ message: err.message })
+    }
+
+    throw err
   }
 
   return reply.status(201).send()
