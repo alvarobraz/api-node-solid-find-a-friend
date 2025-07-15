@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import z from 'zod'
-import { PrismaOrgsRepository } from '@/repositories/prisma-orgs-repositories'
+import { PrismaOrgsRepository } from '@/repositories/prisma/prisma-orgs-repositories'
 import { CreateOrgUseCase } from '@/use-cases/create-org'
 // import { InMemoryOrgsRepository } from '@/repositories/in-memory-orgs-repository'
 

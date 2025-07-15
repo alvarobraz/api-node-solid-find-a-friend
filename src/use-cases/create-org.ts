@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { OrgsRepository } from '@/repositories/orgs-repository'
 import { hash } from 'bcryptjs'
 
 interface createOrgUseCaseRequest {
@@ -15,7 +16,7 @@ interface createOrgUseCaseRequest {
 }
 
 export class CreateOrgUseCase {
-  constructor(private orgsRepository: any) {}
+  constructor(private orgsRepository: OrgsRepository) {}
 
   async execute({
     name,
