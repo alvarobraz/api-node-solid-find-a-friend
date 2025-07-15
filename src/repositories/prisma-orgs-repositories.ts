@@ -3,10 +3,10 @@ import { Prisma } from 'generated/prisma'
 
 export class PrismaOrgsRepository {
   async create(data: Prisma.OrgCreateInput) {
-    const user = await prisma.org.create({
+    const org = await prisma.org.create({
       data,
     })
 
-    return user
+    return org
   }
 }
