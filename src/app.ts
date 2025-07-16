@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+import fastifyJwt from '@fastify/jwt'
 import fastify from 'fastify'
 import { appRoutes } from './http/routes'
 import { ZodError } from 'zod'
@@ -7,6 +7,10 @@ import { env } from './env'
 export const app = fastify()
 
 app.register(appRoutes)
+
+app.register(fastifyJwt, {
+  secret: env.JWT_SECRET,
+})
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {

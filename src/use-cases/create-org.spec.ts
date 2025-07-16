@@ -1,15 +1,20 @@
 import { InMemoryOrgsRepository } from '@/repositories/in-memory/in-memory-orgs-repository'
 import { compare } from 'bcryptjs'
-import { expect, describe, it } from 'vitest'
+import { expect, describe, it, beforeEach } from 'vitest'
 import { CreateOrgUseCase } from './create-org'
 import { OrgAlreadyExistsError } from './errors/org-already-exists-error'
 
-describe('Create Org Use Case', () => {
-  it('should to create a org', async () => {
-    const orgsRepository = new InMemoryOrgsRepository()
-    const createOrgUseCase = new CreateOrgUseCase(orgsRepository)
+let orgsRepository: InMemoryOrgsRepository
+let sut: CreateOrgUseCase
 
-    const { org } = await createOrgUseCase.execute({
+describe('Create Org Use Case', () => {
+  beforeEach(() => {
+    orgsRepository = new InMemoryOrgsRepository()
+    sut = new CreateOrgUseCase(orgsRepository)
+  })
+
+  it('should to create a org', async () => {
+    const { org } = await sut.execute({
       name: 'Org one',
       email: 'orgone@example.com',
       password: '1234567',
@@ -26,10 +31,7 @@ describe('Create Org Use Case', () => {
   })
 
   it('should hash org password upon create org', async () => {
-    const orgsRepository = new InMemoryOrgsRepository()
-    const createOrgUseCase = new CreateOrgUseCase(orgsRepository)
-
-    const { org } = await createOrgUseCase.execute({
+    const { org } = await sut.execute({
       name: 'Org one',
       email: 'orgone@example.com',
       password: '1234567',
@@ -51,12 +53,9 @@ describe('Create Org Use Case', () => {
   })
 
   it('should not be able to create a org with same email twice', async () => {
-    const orgsRepository = new InMemoryOrgsRepository()
-    const createOrgUseCase = new CreateOrgUseCase(orgsRepository)
-
     const email = 'johndoe@example.com'
 
-    await createOrgUseCase.execute({
+    await sut.execute({
       name: 'Org One',
       email,
       password: '1234567',
@@ -70,7 +69,7 @@ describe('Create Org Use Case', () => {
     })
 
     expect(() =>
-      createOrgUseCase.execute({
+      sut.execute({
         name: 'Org One',
         email,
         password: '1234567',

@@ -5,6 +5,16 @@ export class InMemoryOrgsRepository implements OrgsRepository {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public items: Org[] = []
 
+  async findById(id: string) {
+    const org = this.items.find((item) => item.id === id)
+
+    if (!org) {
+      return null
+    }
+
+    return org
+  }
+
   async findByEmail(email: string): Promise<Org | null> {
     const org = this.items.find((item) => item.email === email)
 
