@@ -44,7 +44,7 @@ export async function authenticate(
     return reply
       .setCookie('refreshToken', refreshToken, {
         path: '/',
-        secure: true,
+        // secure: true,
         sameSite: true,
         httpOnly: true,
       })
