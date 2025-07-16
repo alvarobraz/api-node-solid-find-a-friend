@@ -1,4 +1,4 @@
-import { Prisma, Org } from 'generated/prisma'
+import { Prisma, Org, Role } from 'generated/prisma'
 import { OrgsRepository } from '../orgs-repository'
 
 export class InMemoryOrgsRepository implements OrgsRepository {
@@ -31,6 +31,7 @@ export class InMemoryOrgsRepository implements OrgsRepository {
       name: data.name,
       email: data.email,
       password_hash: data.password_hash,
+      role: (data.role ?? 'MEMBER') as Role,
       whatsapp: data.whatsapp,
       street: data.street,
       city: data.city,
@@ -42,6 +43,16 @@ export class InMemoryOrgsRepository implements OrgsRepository {
     }
 
     this.items.push(org)
+
+    return org
+  }
+
+  async save(org: Org) {
+    const orgIndex = this.items.findIndex((item) => item.id === org.id)
+
+    if (orgIndex >= 0) {
+      this.items[orgIndex] = org
+    }
 
     return org
   }

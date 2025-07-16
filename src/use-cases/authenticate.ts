@@ -32,6 +32,8 @@ export class AuthenticateUseCase {
       throw new InvalidCredentialsError()
     }
 
+    org.role = 'ADMIN'
+
     return {
       org,
     }
