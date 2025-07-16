@@ -15,8 +15,8 @@ export async function createOrg(request: FastifyRequest, reply: FastifyReply) {
     city: z.string(),
     state: z.string(),
     postal_code: z.string(),
-    latitude: z.string(),
-    longitude: z.string(),
+    latitude: z.coerce.number(),
+    longitude: z.coerce.number(),
   })
 
   const {
