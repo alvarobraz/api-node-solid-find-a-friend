@@ -35,7 +35,7 @@ describe('Get User Profile Use Case', () => {
   })
 
   it('should not be able to get org profile with wrong id', async () => {
-    expect(() =>
+    await expect(() =>
       sut.execute({
         orgId: 'non-existing-id',
       }),

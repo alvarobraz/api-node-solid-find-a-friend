@@ -68,7 +68,7 @@ describe('Create Org Use Case', () => {
       longitude: -49.2862921,
     })
 
-    expect(() =>
+    await expect(() =>
       sut.execute({
         name: 'Org One',
         email,

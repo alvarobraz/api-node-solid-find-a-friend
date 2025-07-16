@@ -24,8 +24,6 @@ export class UpdateOrgUseCase {
       throw new ResourceNotFoundError()
     }
 
-    console.log(org)
-
     const updatedOrg: Org = {
       ...org,
       ...updates,

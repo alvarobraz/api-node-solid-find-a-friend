@@ -58,7 +58,7 @@ describe('Authenticate Use Case', () => {
       longitude: -49.2862921,
     })
 
-    expect(() =>
+    await expect(() =>
       sut.execute({
         email: 'johndoe@example.com',
         password: '123123',
