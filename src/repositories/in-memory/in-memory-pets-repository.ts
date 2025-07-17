@@ -4,23 +4,6 @@ import { PetsRepository } from '../pets-repository'
 export class InMemoryPetsRepository implements PetsRepository {
   public items: Pet[] = []
 
-  async findByName(name: string): Promise<Pet | null> {
-    const normalizedSearchName = name
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-
-    const pet = this.items.find((item) => {
-      const normalizedItemName = item.name
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .toLowerCase()
-      return normalizedItemName === normalizedSearchName
-    })
-
-    return pet || null
-  }
-
   async create(data: Prisma.PetUncheckedCreateInput): Promise<Pet> {
     const pet: Pet = {
       id: 'pet-1',
