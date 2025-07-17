@@ -3,7 +3,6 @@ import { expect, describe, it, beforeEach } from 'vitest'
 import { CreatePetUseCase } from './create-pet'
 import { CreateOrgUseCase } from './create-org'
 import { InMemoryOrgsRepository } from '@/repositories/in-memory/in-memory-orgs-repository'
-import { PetAlreadyExistsError } from './errors/pet-already-exists-error'
 
 let orgsRepository: InMemoryOrgsRepository
 let petsRepository: InMemoryPetsRepository
@@ -48,50 +47,5 @@ describe('Create Pet Use Case', () => {
 
     expect(pet.id).toEqual(expect.any(String))
     expect(pet.org_id).toEqual(org.id)
-  })
-
-  it('should not be able to create a pet with same name twice', async () => {
-    const { org } = await createOrgUseCase.execute({
-      name: 'Org one',
-      email: 'orgone@example.com',
-      password: '1234567',
-      whatsapp: '419123456789',
-      street: 'Ciryllo Merlin, 59',
-      city: 'Curitiba',
-      state: 'Paraná',
-      postal_code: '81010360',
-      latitude: -25.4795628,
-      longitude: -49.2862921,
-    })
-
-    expect(org.id).toEqual(expect.any(String))
-
-    const name = 'Myah'
-
-    await createPetUseCase.execute({
-      name,
-      description:
-        'Sou uma gata bem caseira e bem individual, mas adoro meus donos, sou um belo cobertor de pernas',
-      age: 'Joven',
-      size: 'Pequenina',
-      energy_level: 'Média',
-      independence: '(Alta) Necessita apenas que troque comida e areia)',
-      environment: 'Fechado',
-      org_id: org.id,
-    })
-
-    await expect(() =>
-      createPetUseCase.execute({
-        name,
-        description:
-          'Sou uma gata bem caseira e bem individual, mas adoro meus donos, sou um belo cobertor de pernas',
-        age: 'Joven',
-        size: 'Pequenina',
-        energy_level: 'Média',
-        independence: '(Alta) Necessita apenas que troque comida e areia)',
-        environment: 'Fechado',
-        org_id: org.id,
-      }),
-    ).rejects.toBeInstanceOf(PetAlreadyExistsError)
   })
 })

@@ -1,5 +1,4 @@
 import { PetsRepository } from '@/repositories/pets-repository'
-import { PetAlreadyExistsError } from './errors/pet-already-exists-error'
 import { Pet } from 'generated/prisma'
 
 interface CreatePetUseCaseRequest {
@@ -30,17 +29,6 @@ export class CreatePetUseCase {
     environment,
     org_id,
   }: CreatePetUseCaseRequest): Promise<CreatePetUseCaseResponse> {
-    const normalizedName = name
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-
-    const petWithSameName = await this.petsRepository.findByName(normalizedName)
-
-    if (petWithSameName) {
-      throw new PetAlreadyExistsError()
-    }
-
     const pet = await this.petsRepository.create({
       name,
       description,

@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { Pet, Prisma } from 'generated/prisma'
+import { Prisma } from 'generated/prisma'
 import { PetsRepository } from '../pets-repository'
 
 export class PrismaPetsRepository implements PetsRepository {
@@ -12,19 +12,6 @@ export class PrismaPetsRepository implements PetsRepository {
 
   //   return org
   // }
-
-  async findByName(name: string): Promise<Pet | null> {
-    const pet = await prisma.pet.findFirst({
-      where: {
-        name: {
-          equals: name,
-          mode: 'insensitive',
-        },
-      },
-    })
-
-    return pet
-  }
 
   async create(data: Prisma.PetUncheckedCreateInput) {
     const pet = await prisma.pet.create({
