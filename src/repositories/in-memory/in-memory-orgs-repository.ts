@@ -1,5 +1,6 @@
 import { Prisma, Org, Role } from 'generated/prisma'
 import { OrgsRepository } from '../orgs-repository'
+import { BrazilianState } from '@/utils/states'
 
 export class InMemoryOrgsRepository implements OrgsRepository {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,5 +56,15 @@ export class InMemoryOrgsRepository implements OrgsRepository {
     }
 
     return org
+  }
+
+  async fetchByStateAndCity(
+    state: BrazilianState,
+    city: string,
+  ): Promise<Org[]> {
+    return this.items.filter(
+      (item) =>
+        item.state === state && item.city.toLowerCase() === city.toLowerCase(),
+    )
   }
 }

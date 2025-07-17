@@ -19,20 +19,50 @@ enum Role {
   MEMBER
 }
 
+enum BrazilianState {
+  AC
+  AL
+  AP
+  AM
+  BA
+  CE
+  DF
+  ES
+  GO
+  MA
+  MT
+  MS
+  MG
+  PA
+  PB
+  PR
+  PE
+  PI
+  RJ
+  RN
+  RS
+  RO
+  RR
+  SC
+  SP
+  SE
+  TO
+}
+
 model Org {
-  id            String   @id @default(uuid())
+  id            String         @id @default(uuid())
   name          String
-  email         String   @unique
+  email         String         @unique
   password_hash String
-  role          Role     @default(MEMBER)
+  role          Role           @default(MEMBER)
   whatsapp      String
   street        String
   city          String
-  state         String
+  state         BrazilianState
   postal_code   String
   latitude      Decimal
   longitude     Decimal
-  created_at    DateTime @default(now())
+  created_at    DateTime       @default(now())
   pets          Pet[]
 
   @@map("orgs")

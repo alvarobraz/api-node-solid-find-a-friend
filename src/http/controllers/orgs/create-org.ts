@@ -3,6 +3,7 @@ import z from 'zod'
 // import { InMemoryOrgsRepository } from '@/repositories/in-memory-orgs-repository'
 import { makeCreateOrgUseCase } from '@/use-cases/factories/make-create-org-use-case'
 import { OrgAlreadyExistsError } from '@/use-cases/errors/org-already-exists-error'
+import { BrazilianState } from '@/utils/states'
 
 export async function createOrg(request: FastifyRequest, reply: FastifyReply) {
   const registerBodySchema = z.object({
@@ -12,7 +13,14 @@ export async function createOrg(request: FastifyRequest, reply: FastifyReply) {
     whatsapp: z.string(),
     street: z.string(),
     city: z.string(),
-    state: z.string(),
+    state: z
+      .enum(
+        Object.values(BrazilianState) as [
+          keyof typeof BrazilianState,
+          ...Array<keyof typeof BrazilianState>,
+        ],
+      )
+      .transform((val) => val as BrazilianState),
     postal_code: z.string(),
     latitude: z.coerce.number(),
     longitude: z.coerce.number(),

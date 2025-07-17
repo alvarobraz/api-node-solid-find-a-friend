@@ -21,7 +21,7 @@ describe('Get User Profile Use Case', () => {
       whatsapp: '419123456789',
       street: 'Ciryllo Merlin, 59',
       city: 'Curitiba',
-      state: 'Paraná',
+      state: 'PR',
       postal_code: '81010360',
       latitude: -25.4795628,
       longitude: -49.2862921,

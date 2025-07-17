@@ -2,6 +2,7 @@ import { InMemoryOrgsRepository } from '@/repositories/in-memory/in-memory-orgs-
 import { expect, describe, it, beforeEach } from 'vitest'
 import { CreateOrgUseCase } from './create-org'
 import { UpdateOrgUseCase } from './update-org-profile'
+import { BrazilianState } from '@/utils/states'
 
 let orgsRepository: InMemoryOrgsRepository
 let createOrgUseCase: CreateOrgUseCase
@@ -22,7 +23,7 @@ describe('Create Org Use Case', () => {
       whatsapp: '419123456789',
       street: 'Rua A',
       city: 'Cidade A',
-      state: 'Estado A',
+      state: BrazilianState.PR,
       postal_code: '00000000',
       latitude: -25.0,
       longitude: -49.0,

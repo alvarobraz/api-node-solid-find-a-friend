@@ -2,6 +2,8 @@ import { OrgsRepository } from '@/repositories/orgs-repository'
 import { hash } from 'bcryptjs'
 import { OrgAlreadyExistsError } from './errors/org-already-exists-error'
 import { Org, Prisma } from 'generated/prisma'
+import { BrazilianState } from '@/utils/states'
+import { InvalidStateError } from './errors/invalid-state-errors'
 
 interface CreateOrgUseCaseRequest {
   name: string
@@ -10,7 +12,7 @@ interface CreateOrgUseCaseRequest {
   whatsapp: string
   street: string
   city: string
-  state: string
+  state: BrazilianState
   postal_code: string
   latitude: number
   longitude: number
@@ -36,6 +38,10 @@ export class CreateOrgUseCase {
     latitude,
     longitude,
   }: CreateOrgUseCaseRequest): Promise<CreateOrgUseCaseResponse> {
+    if (!Object.values(BrazilianState).includes(state)) {
+      throw new InvalidStateError()
+    }
+
     const password_hash = await hash(password, 6)
 
     const userWithSameEmail = await this.orgsRepository.findByEmail(email)

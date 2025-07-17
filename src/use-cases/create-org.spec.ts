@@ -3,6 +3,7 @@ import { compare } from 'bcryptjs'
 import { expect, describe, it, beforeEach } from 'vitest'
 import { CreateOrgUseCase } from './create-org'
 import { OrgAlreadyExistsError } from './errors/org-already-exists-error'
+import { BrazilianState } from '@/utils/states'
 
 let orgsRepository: InMemoryOrgsRepository
 let sut: CreateOrgUseCase
@@ -21,7 +22,7 @@ describe('Create Org Use Case', () => {
       whatsapp: '419123456789',
       street: 'Ciryllo Merlin, 59',
       city: 'Curitiba',
-      state: 'Paraná',
+      state: BrazilianState.PR,
       postal_code: '81010360',
       latitude: -25.4795628,
       longitude: -49.2862921,
@@ -38,7 +39,7 @@ describe('Create Org Use Case', () => {
       whatsapp: '419123456789',
       street: 'Ciryllo Merlin, 59',
       city: 'Curitiba',
-      state: 'Paraná',
+      state: BrazilianState.PR,
       postal_code: '81010360',
       latitude: -25.4795628,
       longitude: -49.2862921,
@@ -62,7 +63,7 @@ describe('Create Org Use Case', () => {
       whatsapp: '419123456789',
       street: 'Ciryllo Merlin, 59',
       city: 'Curitiba',
-      state: 'Paraná',
+      state: BrazilianState.PR,
       postal_code: '81010360',
       latitude: -25.4795628,
       longitude: -49.2862921,
@@ -76,7 +77,7 @@ describe('Create Org Use Case', () => {
         whatsapp: '419123456789',
         street: 'Ciryllo Merlin, 59',
         city: 'Curitiba',
-        state: 'Paraná',
+        state: BrazilianState.PR,
         postal_code: '81010360',
         latitude: -25.4795628,
         longitude: -49.2862921,
