@@ -1,7 +1,8 @@
 import { BrazilianState } from '@/utils/states'
-import { Prisma, Pet } from 'generated/prisma'
+import { Prisma, Pet, Org } from 'generated/prisma'
 
 export interface PetsRepository {
+  findById(id: string): Promise<(Pet & { org?: Org }) | null>
   create(data: Prisma.PetUncheckedCreateInput): Promise<Pet>
   findByCityAndProperties(
     city: string,
@@ -16,4 +17,5 @@ export interface PetsRepository {
       environment: string
     }>,
   ): Promise<Pet[]>
+  findOrgById(org_id: string): Promise<Org | null>
 }

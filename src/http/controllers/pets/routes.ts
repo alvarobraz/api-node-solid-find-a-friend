@@ -3,6 +3,7 @@ import { verifyJwt } from '@/http/middlewares/verify-jwt'
 import { verifyUserRole } from '@/http/middlewares/verify-user-role'
 import { createPet } from './create-pet'
 import { searchPets } from './search-pets'
+import { getPetById } from './get-pet'
 
 export async function petRoutes(app: FastifyInstance) {
   app.post(
@@ -12,4 +13,6 @@ export async function petRoutes(app: FastifyInstance) {
   )
 
   app.get('/pets', searchPets)
+  app.get('/pets/:id', getPetById)
+  // getPetById
 }

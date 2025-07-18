@@ -1,9 +1,22 @@
 import { prisma } from '@/lib/prisma'
-import { Pet, Prisma } from 'generated/prisma'
+import { Org, Pet, Prisma } from 'generated/prisma'
 import { PetsRepository } from '../pets-repository'
 import { BrazilianState } from '@/utils/states'
 
 export class PrismaPetsRepository implements PetsRepository {
+  async findById(id: string): Promise<Pet | null> {
+    const pet = await prisma.pet.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        org: true,
+      },
+    })
+
+    return pet
+  }
+
   async create(data: Prisma.PetUncheckedCreateInput) {
     const pet = await prisma.pet.create({
       data,
@@ -65,5 +78,15 @@ export class PrismaPetsRepository implements PetsRepository {
     })
 
     return pets
+  }
+
+  async findOrgById(org_id: string): Promise<Org | null> {
+    const org = await prisma.org.findUnique({
+      where: {
+        id: org_id,
+      },
+    })
+
+    return org
   }
 }

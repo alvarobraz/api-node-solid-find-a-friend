@@ -7,6 +7,7 @@ import {
 } from 'generated/prisma'
 import { PetsRepository } from '../pets-repository'
 import { BrazilianState } from '@/utils/states'
+import { InMemoryOrgsRepository } from './in-memory-orgs-repository'
 
 export class InMemoryPetsRepository implements PetsRepository {
   public items: Array<
@@ -17,12 +18,12 @@ export class InMemoryPetsRepository implements PetsRepository {
     }
   > = []
 
+  constructor(private orgsRepository: InMemoryOrgsRepository) {}
+
   async create(data: Prisma.PetUncheckedCreateInput): Promise<Pet> {
-    const pet: Pet & {
-      org?: Org
-      images?: PetImage[]
-      requirements?: AdoptionRequirement[]
-    } = {
+    const org = await this.orgsRepository.findById(data.org_id)
+
+    const pet: Pet & { org?: Org } = {
       id: data.id ?? 'pet-' + Math.random().toString(36).substr(2, 9),
       name: data.name,
       description: data.description ?? null,
@@ -34,7 +35,7 @@ export class InMemoryPetsRepository implements PetsRepository {
       created_at: new Date(),
       adopted_at: data.adopted_at ? new Date(data.adopted_at) : null,
       org_id: data.org_id,
-      org: undefined,
+      org: org || undefined,
     }
 
     this.items.push(pet)
@@ -108,5 +109,17 @@ export class InMemoryPetsRepository implements PetsRepository {
         matchesEnvironment
       )
     })
+  }
+
+  async findById(id: string): Promise<Pet | null> {
+    const pet = this.items.find((item) => item.id === id) || null
+    if (pet && !pet.org) {
+      pet.org = (await this.orgsRepository.findById(pet.org_id)) || undefined
+    }
+    return pet
+  }
+
+  async findOrgById(org_id: string): Promise<Org | null> {
+    return await this.orgsRepository.findById(org_id)
   }
 }
