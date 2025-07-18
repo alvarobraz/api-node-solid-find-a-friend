@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import z from 'zod'
-// import { InMemoryOrgsRepository } from '@/repositories/in-memory-orgs-repository'
 import { makeUpdateOrgUseCase } from '@/use-cases/factories/make-update-org-use-case'
 import { OrgAlreadyExistsError } from '@/use-cases/errors/org-already-exists-error'
 import { Prisma } from 'generated/prisma'
+import { BrazilianState } from '@/utils/states'
 
 export async function UpdateOrg(request: FastifyRequest, reply: FastifyReply) {
   const updateOrgBodySchema = z.object({
@@ -13,7 +13,14 @@ export async function UpdateOrg(request: FastifyRequest, reply: FastifyReply) {
     whatsapp: z.string().optional(),
     street: z.string().optional(),
     city: z.string().optional(),
-    state: z.string().optional(),
+    state: z
+      .enum(
+        Object.values(BrazilianState) as [
+          keyof typeof BrazilianState,
+          ...Array<keyof typeof BrazilianState>,
+        ],
+      )
+      .transform((val) => val as BrazilianState),
     postal_code: z.string().optional(),
     latitude: z.coerce.number().optional(),
     longitude: z.coerce.number().optional(),

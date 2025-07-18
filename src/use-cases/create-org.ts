@@ -23,7 +23,6 @@ interface CreateOrgUseCaseResponse {
 }
 
 export class CreateOrgUseCase {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(private orgsRepository: OrgsRepository) {}
 
   async execute({

@@ -1,6 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import z from 'zod'
-// import { InMemoryOrgsRepository } from '@/repositories/in-memory-orgs-repository'
 import { makeCreateOrgUseCase } from '@/use-cases/factories/make-create-org-use-case'
 import { OrgAlreadyExistsError } from '@/use-cases/errors/org-already-exists-error'
 import { BrazilianState } from '@/utils/states'

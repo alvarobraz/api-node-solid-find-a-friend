@@ -2,6 +2,7 @@ import { FastifyInstance } from 'fastify'
 import { verifyJwt } from '@/http/middlewares/verify-jwt'
 import { verifyUserRole } from '@/http/middlewares/verify-user-role'
 import { createPet } from './create-pet'
+import { searchPets } from './search-pets'
 
 export async function petRoutes(app: FastifyInstance) {
   app.post(
@@ -9,4 +10,6 @@ export async function petRoutes(app: FastifyInstance) {
     { onRequest: [verifyJwt, verifyUserRole('ADMIN')] },
     createPet,
   )
+
+  app.get('/pets', searchPets)
 }

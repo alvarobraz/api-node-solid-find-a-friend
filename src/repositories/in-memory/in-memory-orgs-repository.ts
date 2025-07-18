@@ -3,7 +3,6 @@ import { OrgsRepository } from '../orgs-repository'
 import { BrazilianState } from '@/utils/states'
 
 export class InMemoryOrgsRepository implements OrgsRepository {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public items: Org[] = []
 
   async findById(id: string) {
