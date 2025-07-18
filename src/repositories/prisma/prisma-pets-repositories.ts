@@ -14,7 +14,7 @@ export class PrismaPetsRepository implements PetsRepository {
 
   async findByCityAndProperties(
     city: string,
-    state: BrazilianState,
+    state?: BrazilianState,
     filters: Partial<{
       name: string
       description: string
@@ -33,7 +33,7 @@ export class PrismaPetsRepository implements PetsRepository {
             contains: city,
             mode: 'insensitive',
           },
-          state,
+          ...(state && { state }),
         },
         name: filters.name
           ? { contains: filters.name, mode: 'insensitive' }

@@ -5,7 +5,7 @@ export interface PetsRepository {
   create(data: Prisma.PetUncheckedCreateInput): Promise<Pet>
   findByCityAndProperties(
     city: string,
-    state: BrazilianState,
+    state?: BrazilianState,
     filters?: Partial<{
       name: string
       description: string

@@ -4,7 +4,7 @@ import { Pet } from 'generated/prisma'
 
 interface FindPetsByCityRequest {
   city: string
-  state: BrazilianState
+  state?: BrazilianState
   filters?: Partial<{
     name: string
     description: string

@@ -6,9 +6,15 @@ import { BrazilianState } from '@/utils/states'
 export async function searchPets(request: FastifyRequest, reply: FastifyReply) {
   const searchPetsQuerySchema = z.object({
     city: z.string(),
-    state: z.nativeEnum(BrazilianState, {
-      message: 'Invalid state. Must be PR or SP',
-    }),
+    state: z
+      .enum(
+        Object.values(BrazilianState) as [
+          keyof typeof BrazilianState,
+          ...Array<keyof typeof BrazilianState>,
+        ],
+      )
+      .transform((val) => val as BrazilianState)
+      .optional(),
     name: z.string().optional(),
     description: z.string().optional(),
     age: z.string().optional(),

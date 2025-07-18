@@ -44,7 +44,7 @@ export class InMemoryPetsRepository implements PetsRepository {
 
   async findByCityAndProperties(
     city: string,
-    state: BrazilianState,
+    state?: BrazilianState,
     filters: Partial<{
       name: string
       description: string
@@ -59,7 +59,11 @@ export class InMemoryPetsRepository implements PetsRepository {
       const matchesCity = item.org?.city
         ? item.org.city.toLowerCase() === city.toLowerCase()
         : false
-      const matchesState = item.org?.state ? item.org.state === state : false
+      const matchesState = state
+        ? item.org?.state
+          ? item.org.state === state
+          : false
+        : true
       const matchesAdopted = item.adopted_at === null
       const matchesName = filters.name
         ? item.name.toLowerCase().includes(filters.name.toLowerCase())
