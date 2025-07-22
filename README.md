@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  Aplicação em Node.js/TypeScript - FindAFriend API - Adoção de pets 🐾
+  Aplicação em Node.js/TypeScript/Fastify - FindAFriend API - Adoção de pets 🐾
   <br>
   <br>
 
