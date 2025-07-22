@@ -7,7 +7,7 @@ interface GetPetUseCaseRequest {
 }
 
 interface GetPetUseCaseResponse {
-  pet: Pet & { org?: Org }
+  pet: Pet & { org?: Org; requirements?: { description: string }[] }
 }
 
 export class GetPetUseCase {

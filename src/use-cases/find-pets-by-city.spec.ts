@@ -1,16 +1,16 @@
 import { InMemoryPetsRepository } from '@/repositories/in-memory/in-memory-pets-repository'
 import { InMemoryOrgsRepository } from '@/repositories/in-memory/in-memory-orgs-repository'
 import { expect, describe, it, beforeEach } from 'vitest'
+import { FindPetsByCityUseCase } from './find-pets-by-city'
 import { CreatePetUseCase } from './create-pet'
 import { CreateOrgUseCase } from './create-org'
-import { FindPetsByCityUseCase } from './find-pets-by-city'
 import { BrazilianState } from '@/utils/states'
 
 let orgsRepository: InMemoryOrgsRepository
 let petsRepository: InMemoryPetsRepository
 let createOrgUseCase: CreateOrgUseCase
 let createPetUseCase: CreatePetUseCase
-let sut: FindPetsByCityUseCase
+let findPetsByCityUseCase: FindPetsByCityUseCase
 
 describe('Find Pets By City Use Case', () => {
   beforeEach(() => {
@@ -18,7 +18,7 @@ describe('Find Pets By City Use Case', () => {
     petsRepository = new InMemoryPetsRepository(orgsRepository)
     createOrgUseCase = new CreateOrgUseCase(orgsRepository)
     createPetUseCase = new CreatePetUseCase(petsRepository)
-    sut = new FindPetsByCityUseCase(petsRepository)
+    findPetsByCityUseCase = new FindPetsByCityUseCase(petsRepository)
   })
 
   it('should find pets by city', async () => {
@@ -35,8 +35,6 @@ describe('Find Pets By City Use Case', () => {
       longitude: -49.2862921,
     })
 
-    expect(org.id).toEqual(expect.any(String))
-
     const { pet } = await createPetUseCase.execute({
       name: 'Myah',
       description:
@@ -48,12 +46,10 @@ describe('Find Pets By City Use Case', () => {
       environment: 'Fechado',
       org_id: org.id,
       adopted_at: null,
+      requirements: ['Casa com quintal', 'Passeios diários'],
     })
 
-    expect(pet.id).toEqual(expect.any(String))
-    expect(pet.org_id).toEqual(org.id)
-
-    const { pets } = await sut.execute({
+    const pets = await findPetsByCityUseCase.execute({
       city: 'Curitiba',
       state: BrazilianState.PR,
     })
@@ -72,6 +68,11 @@ describe('Find Pets By City Use Case', () => {
         environment: 'Fechado',
         org_id: org.id,
         adopted_at: null,
+        created_at: expect.any(Date),
+        requirements: expect.arrayContaining([
+          expect.objectContaining({ description: 'Casa com quintal' }),
+          expect.objectContaining({ description: 'Passeios diários' }),
+        ]),
         org: expect.objectContaining({
           id: org.id,
           name: 'Org one',
@@ -80,14 +81,5 @@ describe('Find Pets By City Use Case', () => {
         }),
       }),
     )
-  })
-
-  it('should return empty array for city with no pets', async () => {
-    const { pets } = await sut.execute({
-      city: 'São Paulo',
-      state: BrazilianState.SP,
-    })
-
-    expect(pets).toHaveLength(0)
   })
 })

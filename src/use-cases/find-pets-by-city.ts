@@ -1,6 +1,6 @@
 import { PetsRepository } from '@/repositories/pets-repository'
 import { BrazilianState } from '@/utils/states'
-import { Pet } from 'generated/prisma'
+import { Org, Pet } from 'generated/prisma'
 
 interface FindPetsByCityRequest {
   city: string
@@ -16,9 +16,10 @@ interface FindPetsByCityRequest {
   }>
 }
 
-interface FindPetsByCityResponse {
-  pets: Pet[]
-}
+type FindPetsByCityResponse = (Pet & {
+  org?: Org
+  requirements?: { description: string }[]
+})[]
 
 export class FindPetsByCityUseCase {
   constructor(private petsRepository: PetsRepository) {}
@@ -28,14 +29,6 @@ export class FindPetsByCityUseCase {
     state,
     filters,
   }: FindPetsByCityRequest): Promise<FindPetsByCityResponse> {
-    const pets = await this.petsRepository.findByCityAndProperties(
-      city,
-      state,
-      filters,
-    )
-
-    return {
-      pets,
-    }
+    return this.petsRepository.findByCityAndProperties(city, state, filters)
   }
 }

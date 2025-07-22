@@ -44,6 +44,10 @@ export async function getPetById(
               state: pet.org.state,
             }
           : undefined,
+        requirements:
+          pet.requirements?.map((req) => ({
+            description: req.description,
+          })) ?? undefined,
       },
     })
   } catch (err) {
@@ -59,7 +63,6 @@ export async function getPetById(
         .send({ message: 'Pet not found or already adopted' })
     }
 
-    // Propagar erros inesperados
     throw err
   }
 }

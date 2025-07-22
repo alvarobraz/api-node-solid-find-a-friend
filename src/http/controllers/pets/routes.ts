@@ -14,5 +14,4 @@ export async function petRoutes(app: FastifyInstance) {
 
   app.get('/pets', searchPets)
   app.get('/pets/:id', getPetById)
-  // getPetById
 }

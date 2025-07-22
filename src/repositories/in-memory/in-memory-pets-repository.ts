@@ -1,30 +1,29 @@
-import {
-  Prisma,
-  Pet,
-  Org,
-  PetImage,
-  AdoptionRequirement,
-} from 'generated/prisma'
-import { PetsRepository } from '../pets-repository'
+import { Pet, Prisma } from 'generated/prisma'
 import { BrazilianState } from '@/utils/states'
+import { PetsRepository } from '../pets-repository'
 import { InMemoryOrgsRepository } from './in-memory-orgs-repository'
 
 export class InMemoryPetsRepository implements PetsRepository {
-  public items: Array<
-    Pet & {
-      org?: Org
-      images?: PetImage[]
-      requirements?: AdoptionRequirement[]
-    }
-  > = []
+  public items: (Pet & { requirements: { description: string }[] })[] = []
 
   constructor(private orgsRepository: InMemoryOrgsRepository) {}
 
-  async create(data: Prisma.PetUncheckedCreateInput): Promise<Pet> {
-    const org = await this.orgsRepository.findById(data.org_id)
+  async findById(id: string) {
+    const pet = this.items.find((item) => item.id === id)
+    if (!pet) return null
+    return {
+      ...pet,
+      org: (await this.orgsRepository.findById(pet.org_id)) ?? undefined,
+    }
+  }
 
-    const pet: Pet & { org?: Org } = {
-      id: data.id ?? 'pet-' + Math.random().toString(36).substr(2, 9),
+  async create(
+    data: Prisma.PetUncheckedCreateInput & {
+      requirements?: { create: { description: string }[] }
+    },
+  ) {
+    const pet: Pet & { requirements: { description: string }[] } = {
+      id: data.id || 'generated-id',
       name: data.name,
       description: data.description ?? null,
       age: data.age ?? null,
@@ -32,14 +31,18 @@ export class InMemoryPetsRepository implements PetsRepository {
       energy_level: data.energy_level ?? null,
       independence: data.independence ?? null,
       environment: data.environment ?? null,
-      created_at: new Date(),
+      created_at: data.created_at ? new Date(data.created_at) : new Date(),
       adopted_at: data.adopted_at ? new Date(data.adopted_at) : null,
       org_id: data.org_id,
-      org: org || undefined,
+      requirements:
+        data.requirements?.create.map((req) => ({
+          description: req.description,
+          id: 'generated-requirement-id',
+          created_at: new Date(),
+        })) || [],
     }
 
     this.items.push(pet)
-
     return pet
   }
 
@@ -55,71 +58,32 @@ export class InMemoryPetsRepository implements PetsRepository {
       independence: string
       environment: string
     }> = {},
-  ): Promise<Pet[]> {
-    return this.items.filter((item) => {
-      const matchesCity = item.org?.city
-        ? item.org.city.toLowerCase() === city.toLowerCase()
-        : false
-      const matchesState = state
-        ? item.org?.state
-          ? item.org.state === state
-          : false
-        : true
-      const matchesAdopted = item.adopted_at === null
-      const matchesName = filters.name
-        ? item.name.toLowerCase().includes(filters.name.toLowerCase())
-        : true
-      const matchesDescription = filters.description
-        ? item.description
-            ?.toLowerCase()
-            .includes(filters.description.toLowerCase())
-        : true
-      const matchesAge = filters.age
-        ? item.age?.toLowerCase().includes(filters.age.toLowerCase())
-        : true
-      const matchesSize = filters.size
-        ? item.size?.toLowerCase().includes(filters.size.toLowerCase())
-        : true
-      const matchesEnergyLevel = filters.energy_level
-        ? item.energy_level
-            ?.toLowerCase()
-            .includes(filters.energy_level.toLowerCase())
-        : true
-      const matchesIndependence = filters.independence
-        ? item.independence
-            ?.toLowerCase()
-            .includes(filters.independence.toLowerCase())
-        : true
-      const matchesEnvironment = filters.environment
-        ? item.environment
-            ?.toLowerCase()
-            .includes(filters.environment.toLowerCase())
-        : true
-
-      return (
-        matchesCity &&
-        matchesState &&
-        matchesAdopted &&
-        matchesName &&
-        matchesDescription &&
-        matchesAge &&
-        matchesSize &&
-        matchesEnergyLevel &&
-        matchesIndependence &&
-        matchesEnvironment
-      )
-    })
+  ) {
+    const pets = await Promise.all(
+      this.items
+        .filter((pet) => {
+          const org = this.orgsRepository.items.find(
+            (org) => org.id === pet.org_id,
+          )
+          const matchesCity = org?.city === city
+          const matchesState = state ? org?.state === state : true
+          const matchesFilters = filters
+            ? Object.entries(filters).every(
+                ([key, value]) => pet[key as keyof typeof pet] === value,
+              )
+            : true
+          const matchesAdopted = pet.adopted_at === null // Only return non-adopted pets
+          return matchesCity && matchesState && matchesFilters && matchesAdopted
+        })
+        .map(async (pet) => ({
+          ...pet,
+          org: (await this.orgsRepository.findById(pet.org_id)) ?? undefined,
+        })),
+    )
+    return pets
   }
 
-  async findById(id: string): Promise<Pet | null> {
-    const pet = this.items.find((item) => item.id === id) || null
-    if (pet && !pet.org) {
-      pet.org = (await this.orgsRepository.findById(pet.org_id)) || undefined
-    }
-    return pet
-  }
-
-  async findOrgById(org_id: string): Promise<Org | null> {
-    return await this.orgsRepository.findById(org_id)
+  async findOrgById(org_id: string) {
+    return this.orgsRepository.findById(org_id)
   }
 }

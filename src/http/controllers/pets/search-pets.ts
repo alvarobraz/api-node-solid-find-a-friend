@@ -38,7 +38,7 @@ export async function searchPets(request: FastifyRequest, reply: FastifyReply) {
 
   const findPetsUseCase = makeFindPetsByCityUseCase()
 
-  const { pets } = await findPetsUseCase.execute({
+  const pets = await findPetsUseCase.execute({
     city,
     state,
     filters: {

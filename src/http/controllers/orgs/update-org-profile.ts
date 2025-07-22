@@ -20,7 +20,8 @@ export async function UpdateOrg(request: FastifyRequest, reply: FastifyReply) {
           ...Array<keyof typeof BrazilianState>,
         ],
       )
-      .transform((val) => val as BrazilianState),
+      .transform((val) => val as BrazilianState)
+      .optional(),
     postal_code: z.string().optional(),
     latitude: z.coerce.number().optional(),
     longitude: z.coerce.number().optional(),

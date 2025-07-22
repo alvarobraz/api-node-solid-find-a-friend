@@ -1,28 +1,35 @@
-import { prisma } from '@/lib/prisma'
-import { Org, Pet, Prisma } from 'generated/prisma'
-import { PetsRepository } from '../pets-repository'
+import { Prisma } from 'generated/prisma'
 import { BrazilianState } from '@/utils/states'
+import { PetsRepository } from '../pets-repository'
+import { prisma } from '@/lib/prisma'
 
 export class PrismaPetsRepository implements PetsRepository {
-  async findById(id: string): Promise<Pet | null> {
-    const pet = await prisma.pet.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        org: true,
-      },
+  async findById(id: string) {
+    return prisma.pet.findUnique({
+      where: { id },
+      include: { org: true, requirements: true },
     })
-
-    return pet
   }
 
-  async create(data: Prisma.PetUncheckedCreateInput) {
-    const pet = await prisma.pet.create({
-      data,
+  async create(
+    data: Prisma.PetUncheckedCreateInput & {
+      requirements?: { create: { description: string }[] }
+    },
+  ) {
+    return prisma.pet.create({
+      data: {
+        ...data,
+        requirements: data.requirements
+          ? {
+              create: data.requirements.create.map((req) => ({
+                description: req.description,
+                created_at: new Date(),
+              })),
+            }
+          : undefined,
+      },
+      include: { requirements: true },
     })
-
-    return pet
   }
 
   async findByCityAndProperties(
@@ -37,8 +44,8 @@ export class PrismaPetsRepository implements PetsRepository {
       independence: string
       environment: string
     }> = {},
-  ): Promise<Pet[]> {
-    const pets = await prisma.pet.findMany({
+  ) {
+    return prisma.pet.findMany({
       where: {
         adopted_at: null,
         org: {
@@ -76,17 +83,9 @@ export class PrismaPetsRepository implements PetsRepository {
         requirements: true,
       },
     })
-
-    return pets
   }
 
-  async findOrgById(org_id: string): Promise<Org | null> {
-    const org = await prisma.org.findUnique({
-      where: {
-        id: org_id,
-      },
-    })
-
-    return org
+  async findOrgById(org_id: string) {
+    return prisma.org.findUnique({ where: { id: org_id } })
   }
 }

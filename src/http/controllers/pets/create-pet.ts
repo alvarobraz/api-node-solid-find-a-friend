@@ -11,6 +11,7 @@ export async function createPet(request: FastifyRequest, reply: FastifyReply) {
     energy_level: z.string().nullable(),
     independence: z.string().nullable(),
     environment: z.string().nullable(),
+    requirements: z.array(z.string()).optional(),
   })
 
   const {
@@ -21,6 +22,7 @@ export async function createPet(request: FastifyRequest, reply: FastifyReply) {
     energy_level,
     independence,
     environment,
+    requirements,
   } = petBodySchema.parse(request.body)
 
   try {
@@ -35,6 +37,7 @@ export async function createPet(request: FastifyRequest, reply: FastifyReply) {
       independence,
       environment,
       org_id: request.user.sub,
+      requirements,
     })
   } catch (err) {
     return reply.status(409)

@@ -45,6 +45,7 @@ describe('Create Pet Use Case', () => {
       environment: 'Fechado',
       org_id: org.id,
       adopted_at: null,
+      requirements: ['Casa com quintal', 'Passeios diários'],
     })
 
     expect(pet.id).toEqual(expect.any(String))
@@ -56,6 +57,13 @@ describe('Create Pet Use Case', () => {
         city: 'Curitiba',
         state: BrazilianState.PR,
       }),
+    )
+    expect(pet.requirements).toHaveLength(2)
+    expect(pet.requirements).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ description: 'Casa com quintal' }),
+        expect.objectContaining({ description: 'Passeios diários' }),
+      ]),
     )
   })
 })

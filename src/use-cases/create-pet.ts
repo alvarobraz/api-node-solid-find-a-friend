@@ -11,23 +11,12 @@ interface CreatePetUseCaseRequest {
   independence?: string | null
   environment?: string | null
   org_id: string
-  images?:
-    | {
-        connect: { id?: string; url?: string } | { id?: string; url?: string }[]
-      }
-    | undefined
-  requirements?:
-    | {
-        connect:
-          | { id?: string; description?: string }
-          | { id?: string; description?: string }[]
-      }
-    | undefined
+  requirements?: string[]
   adopted_at?: Date | string | null
 }
 
 interface CreatePetUseCaseResponse {
-  pet: Pet & { org?: Org }
+  pet: Pet & { org?: Org; requirements?: { description: string }[] }
 }
 
 export class CreatePetUseCase {
@@ -43,6 +32,7 @@ export class CreatePetUseCase {
     environment,
     org_id,
     adopted_at,
+    requirements,
   }: CreatePetUseCaseRequest): Promise<CreatePetUseCaseResponse> {
     const orgExists = await this.petsRepository.findOrgById(org_id)
     if (!orgExists) {
@@ -58,11 +48,21 @@ export class CreatePetUseCase {
       independence,
       environment,
       org_id,
+      requirements: requirements
+        ? {
+            create: requirements.map((description) => ({ description })),
+          }
+        : undefined,
       adopted_at,
     })
 
+    const org = await this.petsRepository.findOrgById(org_id)
+
     return {
-      pet,
+      pet: {
+        ...pet,
+        org: org ?? undefined,
+      },
     }
   }
 }
