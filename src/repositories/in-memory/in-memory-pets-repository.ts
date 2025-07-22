@@ -1,4 +1,4 @@
-import { Pet, Prisma } from 'generated/prisma'
+import { Org, Pet, Prisma } from 'generated/prisma'
 import { BrazilianState } from '@/utils/states'
 import { PetsRepository } from '../pets-repository'
 import { InMemoryOrgsRepository } from './in-memory-orgs-repository'
@@ -72,7 +72,7 @@ export class InMemoryPetsRepository implements PetsRepository {
                 ([key, value]) => pet[key as keyof typeof pet] === value,
               )
             : true
-          const matchesAdopted = pet.adopted_at === null // Only return non-adopted pets
+          const matchesAdopted = pet.adopted_at === null
           return matchesCity && matchesState && matchesFilters && matchesAdopted
         })
         .map(async (pet) => ({
@@ -85,5 +85,28 @@ export class InMemoryPetsRepository implements PetsRepository {
 
   async findOrgById(org_id: string) {
     return this.orgsRepository.findById(org_id)
+  }
+
+  async save(
+    data: Pet,
+  ): Promise<Pet & { org?: Org; requirements?: { description: string }[] }> {
+    const existingPetIndex = this.items.findIndex((item) => item.id === data.id)
+    if (existingPetIndex === -1) {
+      throw new Error('Pet not Found')
+    }
+
+    const updatedPet: Pet & { requirements: { description: string }[] } = {
+      ...this.items[existingPetIndex],
+      ...data,
+    }
+
+    this.items[existingPetIndex] = updatedPet
+
+    const org = await this.orgsRepository.findById(updatedPet.org_id)
+
+    return {
+      ...updatedPet,
+      org: org ?? undefined,
+    }
   }
 }

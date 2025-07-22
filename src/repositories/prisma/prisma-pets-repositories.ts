@@ -1,4 +1,4 @@
-import { Prisma } from 'generated/prisma'
+import { Pet, Prisma } from 'generated/prisma'
 import { BrazilianState } from '@/utils/states'
 import { PetsRepository } from '../pets-repository'
 import { prisma } from '@/lib/prisma'
@@ -87,5 +87,19 @@ export class PrismaPetsRepository implements PetsRepository {
 
   async findOrgById(org_id: string) {
     return prisma.org.findUnique({ where: { id: org_id } })
+  }
+
+  async save(data: Pet) {
+    const pet = await prisma.pet.update({
+      where: { id: data.id },
+      data: {
+        adopted_at: data.adopted_at,
+      },
+      include: {
+        org: true,
+        requirements: true,
+      },
+    })
+    return pet
   }
 }

@@ -7,22 +7,17 @@ export async function getPetById(
   request: FastifyRequest<{ Params: { id: string } }>,
   reply: FastifyReply,
 ) {
-  // Definir o schema para validar o parâmetro id
   const getPetParamsSchema = z.object({
     id: z.string().uuid(),
   })
 
   try {
-    // Validar o parâmetro id
     const { id } = getPetParamsSchema.parse(request.params)
 
-    // Instanciar o caso de uso usando a fábrica
     const getPetByIdUseCase = makeGetPetByIdUseCase()
 
-    // Executar o caso de uso
     const { pet } = await getPetByIdUseCase.execute({ id })
 
-    // Retornar o pet com status 200
     return reply.status(200).send({
       pet: {
         id: pet.id,

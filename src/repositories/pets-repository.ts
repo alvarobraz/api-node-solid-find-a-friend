@@ -26,4 +26,5 @@ export interface PetsRepository {
     }>,
   ): Promise<(Pet & { requirements?: { description: string }[] })[]>
   findOrgById(org_id: string): Promise<Org | null>
+  save(data: Pet): Promise<Pet & { requirements?: { description: string }[] }>
 }
