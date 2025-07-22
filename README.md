@@ -25,7 +25,7 @@
 <p align="center">
   <a href="#dart-sobre">Sobre</a> &#xa0; | &#xa0; 
   <a href="#rocket-tecnologias">Tecnologias</a> &#xa0; | &#xa0;
-  <a href="#estrutura">Estrurura</a> &#xa0; | &#xa0;
+  <a href="#file_folder-estrutura">Estrutura</a> &#xa0; | &#xa0;
   <a href="#white_check_mark-requerimentos">Requerimentos</a> &#xa0; | &#xa0;
   <a href="#checkered_flag-começando">Começando</a>
 </p>
