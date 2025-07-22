@@ -1,3 +1,6 @@
+<p align="center">
+  <a href="https://fastify.dev/" target="blank"><img src="https://fastify.dev/img/logos/fastify-white.svg" width="200" alt="Fastify Logo" /></a>
+</p>
 
 <p align="center">
   Aplicação em Node.js/TypeScript - FindAFriend API - Adoção de pets 🐾
@@ -31,7 +34,7 @@
 
 ## :dart: Sobre ##
 
-A **FindAFriend API** é uma aplicação backend robusta e escalável, projetada para facilitar a adoção de animais. A API permite que organizações (ORGs) se cadastrem, gerenciem pets disponíveis para adoção e conectem esses animais a potenciais adotantes. Os usuários podem explorar uma lista de pets disponíveis em sua cidade, filtrá-los por características específicas e visualizar detalhes para entrar em contato com a ORG responsável via WhatsApp..
+A **FindAFriend API** é uma aplicação backend robusta e escalável, projetada para facilitar a adoção de animais. A API permite que organizações (ORGs) se cadastrem, gerenciem pets disponíveis para adoção e conectem esses animais a potenciais adotantes. Os usuários podem explorar uma lista de pets disponíveis em sua cidade, filtrá-los por características específicas e visualizar detalhes para entrar em contato com a ORG responsável via WhatsApp.
 
 A aplicação foi desenvolvida com base em princípios SOLID, utilizando tecnologias modernas como Fastify, Prisma ORM, JWT para autenticação e Zod para validação de dados. Suporta funcionalidades como cadastro e login de ORGs, registro de pets com vinculação a uma ORG, listagem de pets por cidade com filtros opcionais e visualização de detalhes de cada pet. Além disso, a API implementa práticas avançadas como TDD, testes unitários e e2e, RBAC, Refresh Token e padrões de design, garantindo um código organizado, testável e de fácil manutenção.
 
@@ -52,7 +55,7 @@ As seguintes tecnologias foram utilizadas no desenvolvimento do projeto **FindAF
 - **[Vitest](https://vitest.dev/)**: Framework de testes rápido e integrado com Vite, utilizado para testes unitários e e2e.
 - **[Supertest](https://www.npmjs.com/package/supertest)**: Biblioteca para testar APIs HTTP.
 
-## Estrutura ##
+## :file_folder: Estrutura ##
 ```
 .
 ├── docker-compose.yml
